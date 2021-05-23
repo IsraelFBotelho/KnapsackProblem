@@ -23,7 +23,7 @@ func (x sortItems) Less(i, j int) bool {
 
 func (x sortItems) Swap(i, j int) { x[i], x[j] = x[j], x[i] }
 
-// Dado uma quantidade, um limite superior e um inferior gera um slice de array com os valores [peso, valor];
+// Dado uma quantidade, um limite superior e um inferior gera um slice de array com valores [peso, valor] uniformes
 func GetItemsWeightNValues(amount int, limitBot int, limitTop int) [][]int {
 	var weight []int
 	var value []int
@@ -65,6 +65,35 @@ func GetItemsWeightNValues(amount int, limitBot int, limitTop int) [][]int {
 
 	// Ordena conforme valor/peso
 	sort.Sort(sort.Reverse(sortItems(items)))
+	return items
+}
+
+// Dado uma quantidade, um limite superior e um inferior gera um slice de array com valores [peso, valor] pseudo-aleatórios
+func GetItemsWeightNValuesRandom(amount int, limitBot int, limitTop int) [][]int {
+	var weight []int
+	var value []int
+	rand.Seed(time.Now().UnixNano())
+
+	// Preenche 2 slices com valores
+	for i := 0; i < amount; i++ {
+		weight = append(weight, rand.Intn(limitTop-limitBot)+limitBot)
+		value = append(value, rand.Intn(limitTop-limitBot)+limitBot)
+	}
+
+	// Cria a Slice de vetor e preenche conforme: peso[i] - valor[i]
+	var items [][]int
+	for _, j := range weight {
+		var item [2]int
+		item[0] = j
+		items = append(items, item[:])
+	}
+	for i, j := range value {
+		items[i][1] = j
+	}
+
+	// Ordena conforme valor/peso
+	sort.Sort(sort.Reverse(sortItems(items)))
+
 	return items
 }
 

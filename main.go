@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"mochila/bruteforce"
 	"mochila/utils"
 	"os"
@@ -34,14 +35,23 @@ func main() {
 		os.Exit(-1)
 	}
 
-	limitBot, _ := strconv.ParseInt(os.Args[2], 0, 0)
+	limitBot, _ := strconv.ParseInt(os.Args[3], 0, 0)
 
-	limitTop, _ := strconv.ParseInt(os.Args[3], 0, 0)
+	limitTop, _ := strconv.ParseInt(os.Args[4], 0, 0)
 
-	items := utils.GetItemsWeightNValues(int(amount_items), int(limitBot), int(limitTop))
+	items := utils.GetItemsWeightNValuesRandom(int(amount_items), int(limitBot), int(limitTop))
 
 	capacity := utils.GetCapacityKnapsack(items)
 
-	bruteforce.Brute_force(items, capacity)
+	switch os.Args[2] {
+	case "brute":
+		bruteforce.Brute_force(items, capacity)
+	case "limited":
+		//
+	default:
+		fmt.Println("Parametro Inválido")
+		os.Exit(-1)
+
+	}
 
 }

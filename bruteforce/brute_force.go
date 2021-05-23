@@ -13,7 +13,7 @@ func Brute_force(items [][]int, capacity int) {
 
 	// Com o pacote context posso contolar o timeout, então caso chegue no tempo limite, o programa encerra
 	ctx := context.Background()
-	ctx, cancel := context.WithTimeout(ctx, 2*time.Hour)
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
 	// Constroi o primeiro nó
 	node, results, result := getInitialNode(items, capacity)
@@ -24,7 +24,8 @@ func Brute_force(items [][]int, capacity int) {
 			archive, err := os.OpenFile("logBrute.txt", os.O_CREATE|os.O_RDWR|os.O_APPEND, 0666)
 			if err == nil {
 				archive.WriteString("Type of End of Test: " + fmt.Sprint(err) + "\n")
-				archive.WriteString("Items: \n" + fmt.Sprint(items) + "\n")
+				archive.WriteString("Items: [weight, value]\n" + fmt.Sprint(items) + "\n")
+				archive.WriteString("Capacity: " + strconv.FormatInt(int64(capacity), 10) + "\n")
 				archive.WriteString("Result: " + strconv.FormatInt(int64(result), 10) + "\n")
 				archive.WriteString("Result-Matches: " + fmt.Sprint(results) + "\n/////////////////////////////////////////////////////\n")
 			}
