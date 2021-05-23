@@ -7,6 +7,19 @@ import (
 	"strconv"
 )
 
+/*
+	Padrão de Run do executável:
+
+	./main [1, 2, 3] [brute ou limited] [limite inferior] [limite superior]
+
+	[1, 2, 3] -> Determina se é 10, 100 ou 1000 variaveis respectivamente
+
+	[brute ou limited] -> Determina qual das duas versões será rodado
+
+	[limite inferior] -> Determina o menor valor das variaveis
+
+	[limite superior] -> Determina o maior valor das variaveis
+*/
 func main() {
 	amount_items, _ := strconv.ParseInt(os.Args[1], 0, 0)
 
