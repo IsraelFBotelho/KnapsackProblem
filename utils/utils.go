@@ -119,3 +119,62 @@ func GetCapacityKnapsack(items [][]int) int {
 
 	return capacity
 }
+
+// Pega os items e a capacidade e cria o primeiro nó
+func GetInitialNode(items [][]int, capacity int) ([]int, [][]int, int) {
+	var result int
+	var results [][]int
+	var node []int
+	// Percorre item por item e ve quantas vezes pode ter, em sequida diminui e aumenta a capacidade atual e o resultado respectivamente
+	for _, item := range items {
+		times := capacity / item[0]
+		capacity -= times * item[0]
+		node = append(node, times)
+		result += item[1] * times
+	}
+	// Salva e cria um slice com os resultados possiveis
+	aux := make([]int, len(items))
+	copy(aux, node)
+	results = append(results, aux)
+
+	return node, results, result
+}
+
+// Pega um nó ja criado, reduz um na posição passada por parametro e recalcula o novo nó
+func GetNewNode(items [][]int, capacity int, node []int, index int, resultMax int, results [][]int) ([]int, [][]int, int) {
+	var result int
+
+	// Caso o índice do item seja menor que o passado, se mantém, se for igual reduz um e se for maior re-calcula
+	for i, item := range items {
+		if i < index {
+			times := node[i]
+			capacity -= item[0] * times
+			node[i] = times
+			result += item[1] * times
+		} else if i == index {
+			times := node[i] - 1
+			capacity -= item[0] * times
+			node[i] = times
+			result += item[1] * times
+		} else if i > index {
+			times := capacity / item[0]
+			capacity -= times * item[0]
+			node[i] = times
+			result += item[1] * times
+		}
+	}
+	// Caso o resultado desse nó supere o maior resultado até o momento, sobrescreve o valor maximo e a slice de resultados
+	// Caso o nó der o mesmo resultado, adiciona o nó atual no slice
+	if result > resultMax {
+		resultMax = result
+		results = results[:0]
+		aux := make([]int, len(items))
+		copy(aux, node)
+		results = append(results, aux)
+	} else if result == resultMax {
+		aux := make([]int, len(items))
+		copy(aux, node)
+		results = append(results, aux)
+	}
+	return node, results, resultMax
+}
