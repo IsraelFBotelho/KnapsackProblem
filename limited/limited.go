@@ -12,9 +12,10 @@ import (
 // Dado uma slice com os items e a capacidade da mochila, roda testes casos que o resultado seja maior ou igual a um limitante
 func Limited(items [][]int, capacity int) {
 
+	startTime := time.Now()
 	// Com o pacote context posso contolar o timeout, então caso chegue no tempo limite, o programa encerra
 	ctx := context.Background()
-	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 2*time.Hour)
 	defer cancel()
 	stopPoint := false
 	// Constroi o primeiro nó
@@ -26,6 +27,7 @@ func Limited(items [][]int, capacity int) {
 			archive, err := os.OpenFile("logLimited.txt", os.O_CREATE|os.O_RDWR|os.O_APPEND, 0666)
 			if err == nil {
 				archive.WriteString("Type of End of Test: " + fmt.Sprint(ctx.Err()) + "\n")
+				archive.WriteString("Total Execution Time: " + time.Since(startTime).String() + "\n")
 				archive.WriteString("Items: [weight, value]\n" + fmt.Sprint(items) + "\n")
 				archive.WriteString("Capacity: " + strconv.FormatInt(int64(capacity), 10) + "\n")
 				archive.WriteString("Result: " + strconv.FormatInt(int64(result), 10) + "\n")
@@ -39,7 +41,8 @@ func Limited(items [][]int, capacity int) {
 			if node[i] > 0 && upperLimit(items, capacity, node, i, result) {
 				node, results, result = utils.GetNewNode(items, capacity, node, i, result, results)
 				break
-			} else if node[i] == 0 && upperLimit(items, capacity, node, i, result) {
+			} else if node[i] == 0 && i == 0 {
+				fmt.Println(node)
 				stopPoint = true
 			}
 		}
@@ -64,12 +67,14 @@ func upperLimit(items [][]int, capacity int, node []int, index int, resultMax in
 			result += item[1] * node[i]
 			capacityAux += item[0] * node[i]
 		} else if i == index {
-			result += item[1] * (node[i] - 1)
 			break
 		}
 	}
+
+	result += items[index][1] * (node[index] - 1)
+
 	// Calcula o C barra
-	capacityAux = capacity - (items[index][0] * (node[index] - 1)) - capacityAux
+	capacityAux = capacity - ((items[index][0] * (node[index] - 1)) + capacityAux)
 
 	// Calcula o valor/peso para o ponto x + 1
 	aux := (float64(items[index+1][1]) / float64(items[index+1][0]))

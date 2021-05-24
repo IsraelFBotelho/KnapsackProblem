@@ -47,6 +47,10 @@ func main() {
 	// Retorna o valor da capacidade da mochila
 	capacity := utils.GetCapacityKnapsack(items)
 
+	// Caso queria um teste manual preencher as variaveis abaixo
+	// items := [][]int{[],[],[]}
+	// capacity := 0
+
 	// Usado somente caso queira execultar um dos testes e não ambos
 	switch os.Args[2] {
 	case "brute":
