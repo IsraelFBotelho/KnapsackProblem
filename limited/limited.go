@@ -42,7 +42,6 @@ func Limited(items [][]int, capacity int) {
 				node, results, result = utils.GetNewNode(items, capacity, node, i, result, results)
 				break
 			} else if node[i] == 0 && i == 0 {
-				fmt.Println(node)
 				stopPoint = true
 			}
 		}
